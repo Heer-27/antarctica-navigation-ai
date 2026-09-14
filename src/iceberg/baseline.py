@@ -36,8 +36,6 @@ def predict_persistence_baseline(
     else:
         df_feat = df.copy()
 
-    df_feat = df_feat.sort_values(by=['iceberg_id', 'timestamp']).reset_index(drop=True)
-
     results: list[pd.DataFrame] = []
 
     for H in horizons:

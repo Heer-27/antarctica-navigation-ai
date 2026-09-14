@@ -93,6 +93,8 @@ def compute_velocity_features(df: pd.DataFrame) -> pd.DataFrame:
          speed_kmh, bearing_deg, speed_kmh_roll3].
     """
     df_out = df.copy()
+    if 'timestamp' in df_out.columns and not pd.api.types.is_datetime64_any_dtype(df_out['timestamp']):
+        df_out['timestamp'] = pd.to_datetime(df_out['timestamp'])
 
     # Ensure dataset is sorted chronologically per iceberg
     df_out = df_out.sort_values(by=['iceberg_id', 'timestamp']).reset_index(drop=True)

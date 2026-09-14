@@ -147,19 +147,51 @@ def load_model(filepath: str | Path) -> BaseEstimator:
 
 
 def evaluate_models(
-    clean_tracks_path: str | Path = "data/processed/iceberg_tracks_clean.csv"
+    clean_tracks_path: str | Path = "data/processed/iceberg_tracks_clean.csv",
+    sample_frac: float | None = None,
+    observed_only: bool = False,
+    moving_only: bool = False
 ) -> pd.DataFrame:
-    """Train models per horizon on chronological split data, evaluate errors against persistence baseline on held-out test set."""
+    """Train models per horizon on chronological split data, evaluate errors against persistence baseline on held-out test set.
+
+    Parameters
+    ----------
+    clean_tracks_path : str | Path
+        Path to cleaned tracks CSV.
+    sample_frac : float | None
+        Optional fraction of rows to sample for fast iteration testing (e.g. 0.1 for 10%). If None, uses 100% of rows.
+    observed_only : bool
+        If True, filter dataset to real satellite observations (`is_observed` == True) before feature building and evaluation.
+    moving_only : bool
+        If True, evaluate test set errors strictly on moving icebergs (`speed_kmh` > 0.0) to exclude grounded/stationary icebergs.
+
+    Returns
+    -------
+    pd.DataFrame
+        Evaluation table comparing model vs baseline median and mean errors in kilometers.
+    """
     clean_df = pd.read_csv(clean_tracks_path)
     clean_df['timestamp'] = pd.to_datetime(clean_df['timestamp'])
 
+    if observed_only and 'is_observed' in clean_df.columns:
+        clean_df = clean_df[clean_df['is_observed'] == True].reset_index(drop=True)
+
     df_feat = create_trajectory_features(clean_df)
-    X, y, timestamps = build_training_data(clean_df)
+    X, y, timestamps = build_training_data(clean_df, observed_only=False)
+
+    if sample_frac is not None and 0.0 < sample_frac < 1.0:
+        print(f"\n--- Sampling dataset at {sample_frac*100:.1f}% fraction for fast iteration ---")
+        sample_indices = X.sample(frac=sample_frac, random_state=42).index
+        X = X.loc[sample_indices]
+        y = y.loc[sample_indices]
+        timestamps = timestamps.loc[sample_indices]
+        df_feat = df_feat.loc[sample_indices]
 
     origin_lat = df_feat['latitude']
     origin_lon = df_feat['longitude']
     vel_lat = df_feat['velocity_lat_deg_per_hr'].fillna(0.0)
     vel_lon = df_feat['velocity_lon_deg_per_hr'].fillna(0.0)
+    speed_kmh = df_feat['speed_kmh'].fillna(0.0)
 
     eval_results = []
 
@@ -177,6 +209,7 @@ def evaluate_models(
         orig_lon_valid = origin_lon[valid_target_mask]
         vel_lat_valid = vel_lat[valid_target_mask]
         vel_lon_valid = vel_lon[valid_target_mask]
+        speed_valid = speed_kmh[valid_target_mask]
 
         # 80th percentile date split cutoff
         cutoff_date = ts_valid.quantile(0.80)
@@ -193,6 +226,17 @@ def evaluate_models(
         test_orig_lon = orig_lon_valid[test_mask]
         test_vel_lat = vel_lat_valid[test_mask]
         test_vel_lon = vel_lon_valid[test_mask]
+        test_speed = speed_valid[test_mask]
+
+        # Apply moving_only filter to test set evaluation if requested
+        if moving_only:
+            m_mask = test_speed > 0.0
+            X_test_raw = X_test_raw[m_mask]
+            y_test = y_test[m_mask]
+            test_orig_lat = test_orig_lat[m_mask]
+            test_orig_lon = test_orig_lon[m_mask]
+            test_vel_lat = test_vel_lat[m_mask]
+            test_vel_lon = test_vel_lon[m_mask]
 
         print(f"\n========================================================")
         print(f"       CHRONOLOGICAL SPLIT DETAILS ({H}h Horizon)       ")
@@ -229,8 +273,12 @@ def evaluate_models(
         model_lon = test_orig_lon + pred_delta_lon
 
         # Persistence baseline predicted coordinates on SAME test rows
-        base_lat = (test_orig_lat + (test_vel_lat * H)).clip(-90.0, 90.0)
-        base_lon = ((test_orig_lon + (test_vel_lon * H) + 180.0) % 360.0) - 180.0
+        test_df_h = df_feat.loc[valid_target_mask].loc[test_mask].copy()
+        if moving_only:
+            test_df_h = test_df_h[test_df_h['speed_kmh'] > 0.0]
+        base_preds = predict_persistence_baseline(test_df_h, horizons=[H])
+        base_lat = base_preds['predicted_latitude'].values
+        base_lon = base_preds['predicted_longitude'].values
 
         # Calculate great-circle error in km using haversine_km
         model_errors_km = haversine_km(true_lat, true_lon, model_lat, model_lon)
@@ -254,8 +302,9 @@ def evaluate_models(
     eval_df = pd.DataFrame(eval_results)
     eval_df = eval_df[['horizon', 'n_test', 'baseline_median_km', 'model_median_km', 'baseline_mean_km', 'model_mean_km']]
 
+    label = "MOVING ICEBERGS ONLY (speed > 0)" if moving_only else ("OBSERVED ONLY (real satellite)" if observed_only else "ALL ROWS (contaminated)")
     print("\n=======================================================================================================")
-    print("                               MODEL vs BASELINE EVALUATION TABLE                                       ")
+    print(f"                 MODEL vs BASELINE EVALUATION TABLE [{label}]                                         ")
     print("=======================================================================================================")
     print(eval_df.to_string(index=False))
     print("=======================================================================================================\n")
