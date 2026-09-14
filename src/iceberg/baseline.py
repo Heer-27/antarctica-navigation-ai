@@ -59,6 +59,7 @@ def predict_persistence_baseline(
 
         res_df = pd.DataFrame({
             'iceberg_id': sub_df['iceberg_id'],
+            'last_observed_timestamp': orig_ts,
             'origin_timestamp': orig_ts,
             'horizon_hours': H,
             'predicted_timestamp': pred_ts,

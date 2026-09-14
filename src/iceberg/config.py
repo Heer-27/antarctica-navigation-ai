@@ -46,12 +46,15 @@ DEFAULT_SAFETY_BUFFER_KM: float = 10.0
 # hardcoding column names.
 PREDICTION_SCHEMA: list[str] = [
     "iceberg_id",
+    "last_observed_timestamp",
+    "data_age_hours",
     "origin_timestamp",
     "horizon_hours",
     "predicted_timestamp",
     "predicted_latitude",
     "predicted_longitude",
     "predicted_speed_kmh",
+    "position_uncertainty_km",
     "iceberg_risk",
 ]
 
