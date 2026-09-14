@@ -20,21 +20,24 @@ def compute_velocity_features(df: pd.DataFrame) -> pd.DataFrame:
     raise NotImplementedError("compute_velocity_features is not implemented yet.")
 
 
-def compute_lag_features(df: pd.DataFrame, lags: list[int] = [1, 2, 3]) -> pd.DataFrame:
+def compute_lag_features(df: pd.DataFrame, lags: list[int] | None = None) -> pd.DataFrame:
     """Generate lagged position and velocity features across recent observation timesteps.
 
     Parameters
     ----------
     df : pd.DataFrame
         DataFrame with coordinate and velocity attributes.
-    lags : list[int]
-        List of historical timestep offsets.
+    lags : list[int] | None
+        List of historical timestep offsets. If None, defaults to [1, 2, 3].
 
     Returns
     -------
     pd.DataFrame
         DataFrame with lag columns appended.
     """
+    if lags is None:
+        lags = [1, 2, 3]
+
     # TODO: Implement lagged feature generation per iceberg_id
     raise NotImplementedError("compute_lag_features is not implemented yet.")
 

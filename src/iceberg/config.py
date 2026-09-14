@@ -17,6 +17,19 @@ MODELS_DIR: Path = BASE_DIR / "models"
 # Forecast Horizons in Hours
 FORECAST_HORIZONS_HOURS: list[int] = [6, 12, 24]
 
+# Prediction Output Schema Constants
+PREDICTION_SCHEMA: list[str] = [
+    "iceberg_id",
+    "origin_timestamp",
+    "horizon_hours",
+    "predicted_timestamp",
+    "predicted_latitude",
+    "predicted_longitude",
+    "predicted_speed_kmh",
+    "iceberg_risk",
+]
+
+
 # Spatial Risk & Safety Constants
 DEFAULT_SAFETY_BUFFER_KM: float = 10.0  # Safety distance buffer for encounter detection in kilometers
 

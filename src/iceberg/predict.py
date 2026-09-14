@@ -2,12 +2,13 @@
 
 import pandas as pd
 from sklearn.base import BaseEstimator
+from src.iceberg.config import FORECAST_HORIZONS_HOURS, PREDICTION_SCHEMA
 
 
 def predict_future_positions(
     df: pd.DataFrame,
     model: BaseEstimator,
-    horizons: list[int] = [6, 12, 24]
+    horizons: list[int] | None = None
 ) -> pd.DataFrame:
     """Forecast future iceberg coordinates across specified prediction horizons.
 
@@ -17,15 +18,25 @@ def predict_future_positions(
         DataFrame containing latest iceberg tracking records and engineered features.
     model : BaseEstimator
         Trained trajectory prediction estimator.
-    horizons : list[int]
-        List of forecast horizons in hours (default: [6, 12, 24]).
+    horizons : list[int] | None
+        List of forecast horizons in hours. If None, defaults to config.FORECAST_HORIZONS_HOURS ([6, 12, 24]).
 
     Returns
     -------
     pd.DataFrame
-        DataFrame containing predicted positions with columns:
-        [iceberg_id, forecast_timestamp, horizon_hours, predicted_latitude, predicted_longitude].
+        DataFrame containing predicted positions structured according to config.PREDICTION_SCHEMA:
+        - iceberg_id: Unique identifier for the iceberg.
+        - origin_timestamp: Last observed timestamp for that iceberg.
+        - horizon_hours: Forecast horizon in hours (6, 12, or 24).
+        - predicted_timestamp: Target prediction timestamp (origin_timestamp + horizon_hours).
+        - predicted_latitude: Forecasted latitude coordinate.
+        - predicted_longitude: Forecasted longitude coordinate.
+        - predicted_speed_kmh: Forecasted movement speed in km/h.
+        - iceberg_risk: Dynamic risk score heuristic float (0.0 to 1.0).
     """
+    if horizons is None:
+        horizons = FORECAST_HORIZONS_HOURS
+
     # TODO: Generate predictions for each horizon using the trained ML model
     raise NotImplementedError("predict_future_positions is not implemented yet.")
 
