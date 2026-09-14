@@ -61,4 +61,5 @@ DEFAULT_MODEL_PARAMS: dict[str, float | int] = {
     "n_estimators": 100,
     "max_depth": 10,
     "random_state": RANDOM_STATE,
+    "n_jobs": -1,
 }

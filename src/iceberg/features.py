@@ -207,8 +207,8 @@ def build_training_data(
     df: pd.DataFrame,
     horizons: list[int] | None = None,
     observed_only: bool = False
-) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Construct feature matrix X and target matrix y for trajectory model training.
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series]:
+    """Construct feature matrix X, target matrix y, and timestamps series for trajectory model training.
 
     Target ground-truth positions are matched for each forecast horizon H in `horizons`
     (defaulting to config.FORECAST_HORIZONS_HOURS [24, 72, 168] hours):
@@ -220,7 +220,7 @@ def build_training_data(
     - If `observed_only=True`, filters input origin records to rows where `is_observed` is True.
     - Drops `sensor` (string observation artifact), `iceberg_id`, `timestamp`, and `size_major_km`/`size_minor_km`
       (if non-null coverage is under 30%) from feature matrix X.
-    - X and y are aligned by index.
+    - X, y, and timestamps are aligned by index.
 
     Parameters
     ----------
@@ -233,8 +233,11 @@ def build_training_data(
 
     Returns
     -------
-    tuple[pd.DataFrame, pd.DataFrame]
-        Tuple of (X, y) containing features (without metadata/size/sensor columns) and target deltas.
+    tuple[pd.DataFrame, pd.DataFrame, pd.Series]
+        Tuple of (X, y, timestamps) where:
+        - X contains feature matrix (without metadata/size/sensor/timestamp columns).
+        - y contains target coordinate deltas [delta_lat_{H}h, delta_lon_{H}h].
+        - timestamps contains origin observation timestamps aligned by index for date splitting.
     """
     if horizons is None:
         horizons = FORECAST_HORIZONS_HOURS
@@ -288,5 +291,6 @@ def build_training_data(
 
     X = df_feat.drop(columns=[c for c in cols_to_drop_from_X if c in df_feat.columns])
     y = target_df
+    timestamps = df_feat['timestamp']
 
-    return X, y
+    return X, y, timestamps
