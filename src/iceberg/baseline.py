@@ -18,7 +18,7 @@ def predict_persistence_baseline(
     df : pd.DataFrame
         DataFrame with latest iceberg position, speed, and heading angle.
     horizons : list[int] | None
-        List of forecast horizons in hours. If None, defaults to config.FORECAST_HORIZONS_HOURS ([6, 12, 24]).
+        List of forecast horizons in hours. If None, defaults to config.FORECAST_HORIZONS_HOURS ([24, 72, 168]).
 
     Returns
     -------

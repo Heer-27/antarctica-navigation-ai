@@ -1,29 +1,8 @@
 """Encounter detection module for identifying spatial proximity risks between icebergs and vessel routes."""
 
 import pandas as pd
+from src.iceberg.features import haversine_km
 
-
-def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    """Calculate the great-circle distance between two geographic points in kilometers.
-
-    Parameters
-    ----------
-    lat1 : float
-        Latitude of the first point in degrees.
-    lon1 : float
-        Longitude of the first point in degrees.
-    lat2 : float
-        Latitude of the second point in degrees.
-    lon2 : float
-        Longitude of the second point in degrees.
-
-    Returns
-    -------
-    float
-        Distance between the two points in kilometers.
-    """
-    # TODO: Implement Haversine distance formula
-    raise NotImplementedError("haversine_distance is not implemented yet.")
 
 
 def detect_route_encounters(

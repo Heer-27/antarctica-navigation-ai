@@ -19,7 +19,7 @@ def predict_future_positions(
     model : BaseEstimator
         Trained trajectory prediction estimator.
     horizons : list[int] | None
-        List of forecast horizons in hours. If None, defaults to config.FORECAST_HORIZONS_HOURS ([6, 12, 24]).
+        List of forecast horizons in hours. If None, defaults to config.FORECAST_HORIZONS_HOURS ([24, 72, 168]).
 
     Returns
     -------
@@ -27,7 +27,7 @@ def predict_future_positions(
         DataFrame containing predicted positions structured according to config.PREDICTION_SCHEMA:
         - iceberg_id: Unique identifier for the iceberg.
         - origin_timestamp: Last observed timestamp for that iceberg.
-        - horizon_hours: Forecast horizon in hours (6, 12, or 24).
+        - horizon_hours: Forecast horizon in hours (24, 72, or 168).
         - predicted_timestamp: Target prediction timestamp (origin_timestamp + horizon_hours).
         - predicted_latitude: Forecasted latitude coordinate.
         - predicted_longitude: Forecasted longitude coordinate.
