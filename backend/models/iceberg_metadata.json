@@ -1,0 +1,30 @@
+{
+  "model_name": "Coupled Lagrangian Iceberg Drift Predictor",
+  "algorithm": "Dual RandomForestRegressor(n_estimators=100)",
+  "version": "v1.2.1",
+  "trained_at": "2026-09-14T18:23:46.646239+00:00",
+  "sample_count": 840,
+  "features": [
+    "latitude",
+    "longitude",
+    "prev_latitude",
+    "prev_longitude",
+    "length",
+    "width",
+    "height",
+    "speed",
+    "direction",
+    "wind_speed",
+    "wind_direction",
+    "current_speed",
+    "current_direction",
+    "sea_ice_concentration"
+  ],
+  "metrics": {
+    "latMae": "0.0588\u00b0 (~6.5 km at 24h)",
+    "lonMae": "0.1393\u00b0",
+    "latRmse": "0.0730\u00b0",
+    "lonRmse": "0.1828\u00b0",
+    "speedRmse": "0.18 knots"
+  }
+}

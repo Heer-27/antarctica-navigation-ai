@@ -1,0 +1,25 @@
+{
+  "model_name": "Antarctic Sea-Ice Concentration Regressor",
+  "algorithm": "RandomForestRegressor(n_estimators=100)",
+  "version": "v1.0.4",
+  "trained_at": "2026-09-14T18:23:07.649909+00:00",
+  "sample_count": 1200,
+  "features": [
+    "latitude",
+    "longitude",
+    "month",
+    "day_of_year",
+    "prev_concentration",
+    "sst",
+    "air_temperature",
+    "wind_speed",
+    "wind_direction",
+    "current_speed",
+    "wave_height"
+  ],
+  "metrics": {
+    "mae": "0.53%",
+    "rmse": "0.64%",
+    "r2": "0.9990"
+  }
+}

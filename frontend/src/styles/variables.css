@@ -1,0 +1,103 @@
+:root {
+  /* Polar Operations Deck - Ocean & Abyssal Foundation */
+  --bg-space: #010d26;
+  --bg-primary: #04132c;
+  --bg-secondary: #0d1b34;
+  --bg-tertiary: #111f38;
+  --surface-base: #111f38;
+  --surface-elevated: #1c2a43;
+  --surface-overlay: rgba(13, 27, 52, 0.75);
+  --surface-subtle: #27354f;
+
+  /* Liquid Glass Core Tokens */
+  --glass-bg: rgba(17, 31, 56, 0.55);
+  --glass-bg-hover: rgba(28, 42, 67, 0.68);
+  --glass-bg-active: rgba(39, 53, 79, 0.8);
+  --glass-border: rgba(123, 208, 255, 0.18);
+  --glass-border-hover: rgba(142, 213, 255, 0.42);
+  --glass-border-subtle: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(16px);
+  --glass-blur-lg: blur(24px);
+  --glass-specular: inset 0 1px 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 16px 0 rgba(123, 208, 255, 0.04);
+  --glass-specular-accent: inset 0 1px 2px 0 rgba(255, 255, 255, 0.22), inset 0 0 20px 0 rgba(56, 189, 248, 0.12);
+  
+  /* Borders & Grids */
+  --border-subtle: rgba(62, 72, 79, 0.45);
+  --border-medium: rgba(135, 146, 154, 0.3);
+  --border-accent: rgba(123, 208, 255, 0.4);
+  --border-tech: rgba(142, 213, 255, 0.35);
+
+  /* Typography */
+  --text-primary: #d8e2ff;
+  --text-secondary: #bdc8d1;
+  --text-muted: #87929a;
+  --text-inverse: #04132c;
+
+  /* Polar Accents (Glacial Signals) */
+  --accent-ice: #7bd0ff;
+  --accent-ice-dim: rgba(123, 208, 255, 0.16);
+  --accent-ocean: #38bdf8;
+  --accent-polar: #e6f3ff;
+  --accent-cyan: #8ed5ff;
+
+  /* Scientific Risk Scales */
+  --risk-low: #10b981;
+  --risk-low-bg: rgba(16, 185, 129, 0.14);
+  --risk-moderate: #f59e0b;
+  --risk-moderate-bg: rgba(245, 158, 11, 0.14);
+  --risk-high: #ffb4ab;
+  --risk-high-bg: rgba(255, 180, 171, 0.16);
+  --risk-critical: #ef4444;
+  --risk-critical-bg: rgba(239, 68, 68, 0.22);
+
+  /* Sea Ice Concentration Scale */
+  --ice-0-20: #0e274d;
+  --ice-20-40: #1d4b82;
+  --ice-40-60: #3880b9;
+  --ice-60-80: #7bd0ff;
+  --ice-80-100: #eaf6ff;
+
+  /* Fonts */
+  --font-sans: 'Space Grotesk', 'IBM Plex Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Space Mono', 'SFMono-Regular', Menlo, monospace;
+
+  /* Smooth Rounded Borders everywhere */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  /* Liquid Glass Elevations & Drops */
+  --shadow-subtle: 0 4px 12px rgba(1, 13, 38, 0.45);
+  --shadow-panel: 0 8px 32px 0 rgba(1, 13, 38, 0.65), 0 2px 6px 0 rgba(0, 0, 0, 0.4);
+  --shadow-overlay: 0 16px 48px 0 rgba(1, 13, 38, 0.85), 0 4px 16px 0 rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 24px rgba(56, 189, 248, 0.25);
+
+  /* Header / Sidebar Dimensions */
+  --header-height: 56px;
+  --strip-height: 38px;
+  --sidebar-width: 250px;
+  --sidebar-collapsed-width: 68px;
+}
+
+/* High Contrast Mode */
+[data-contrast="high"] {
+  --bg-primary: #00040f;
+  --bg-secondary: #02091c;
+  --surface-base: #061229;
+  --surface-elevated: #0b1a38;
+  --border-subtle: #4972a5;
+  --border-medium: #709fd4;
+  --text-primary: #ffffff;
+  --text-secondary: #cde0ff;
+  --text-muted: #95b3db;
+}
+
+/* Reduced Motion Mode */
+[data-reduced-motion="true"] * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
